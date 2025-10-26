@@ -1,27 +1,110 @@
+using System.Collections;
 using UnityEngine;
 
 public class BoxMovement : MonoBehaviour
 {
     [SerializeField] private BoxVisual _boxVisual;
     [SerializeField] private ButtonVisual _requiredButton;
+    [SerializeField] private float _tileSize = 1f;
+
+    [Header("Floor Check")]
+    [SerializeField] private LayerMask _floorLayer;
+    [SerializeField] private float _checkRadius = 0.5f;
 
     private EventSystem _eventSystem;
+
+    private Vector3 _lastPosition;
+    private bool _lastFallenState = false;
+    private bool _lastCanMoveState = true;
+
+    private Vector3 _startPosition;
+
+    private bool _fallen = false;
+
+    public bool CanMove { get; private set; } = true;
 
     private void Awake()
     {
         _eventSystem = FindAnyObjectByType<EventSystem>();
+        _startPosition = transform.position;
+    }
+
+    private void OnEnable()
+    {
+        _eventSystem.OnPlayerMovement += SaveState;
+        _eventSystem.OnUndoButtonClick += Return;
+        _eventSystem.OnResetButtonClick += ResetPosition;
+    }
+
+    private void OnDisable()
+    {
+        _eventSystem.OnPlayerMovement -= SaveState;
+        _eventSystem.OnUndoButtonClick -= Return;
+        _eventSystem.OnResetButtonClick -= ResetPosition;
     }
 
     public void Move(int dirx, int diry)
     {
-        /////
-        // if no floor under
-        _boxVisual.Fall();
-        /////
-        ///// at the end of movement
-        ///// courutine maybe
-        if (transform.position == _requiredButton.transform.position)
+        if (!CanMove) return;
+
+        Vector3 target = new(transform.position.x + dirx * _tileSize, 
+            transform.position.y + diry * _tileSize);
+        
+        StartCoroutine(MoveCoroutine(target));
+
+        if (Vector3.Distance(target, _requiredButton.transform.position) <= 0.01f)
+        {
+            CanMove = false;
             _requiredButton.PressButton();
+        }
     }
 
+    private IEnumerator MoveCoroutine(Vector3 targetPosition)
+    {
+        while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position,
+                targetPosition, _tileSize * Time.deltaTime * 5);
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+
+        CheckFloor(targetPosition);
+    }
+
+    private void CheckFloor(Vector2 targetPosition)
+    {
+        Collider2D floor = Physics2D.OverlapCircle(targetPosition, _checkRadius, _floorLayer);
+
+        if (floor == null)
+        {
+            _fallen = true;
+            _boxVisual.Fall();
+        }
+    }
+
+    private void SaveState()
+    {
+        _lastPosition = transform.position;
+        _lastFallenState = _fallen;
+        _lastCanMoveState = CanMove;
+    }
+
+    private void Return()
+    {
+        transform.position = _lastPosition;
+        _fallen = _lastFallenState;
+        CanMove = _lastCanMoveState;
+        if (!_fallen)
+            _boxVisual.ResetBox();
+    }
+
+    private void ResetPosition()
+    {
+        transform.position = _startPosition;
+        CanMove = true;
+        _fallen = false;
+        _boxVisual.ResetBox();
+    }
 }

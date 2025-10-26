@@ -3,16 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class BoxVisual : MonoBehaviour
 {
-    private EventSystem _eventSystem;
-    
     private Animator _animator;
 
     private readonly int FALL = Animator.StringToHash("Fall");
+    private readonly int RESET = Animator.StringToHash("Reset");
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _eventSystem = FindAnyObjectByType<EventSystem>();
     }
 
     public void Fall()
@@ -20,8 +18,8 @@ public class BoxVisual : MonoBehaviour
         _animator.SetTrigger(FALL);
     }
 
-    private void ResetBox()
+    public void ResetBox()
     {
-        gameObject.SetActive(true);
+        _animator.SetTrigger(RESET);
     }
 }

@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class UndoButton : MonoBehaviour
 {
-    private EventSystem _eventSystem;
+    [SerializeField] private int _undoCount = 1;
 
-    private int _undoCount = 1;
+    private EventSystem _eventSystem;
 
     private void Awake()
     {
@@ -24,7 +24,10 @@ public class UndoButton : MonoBehaviour
     public void TryUndoMovement()
     {
         if (_undoCount > 0)
+        {
             _eventSystem.UndoMovement();
+            _undoCount--;
+        }
     }
 
     private void ResetUndoCount()

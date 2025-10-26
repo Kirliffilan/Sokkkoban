@@ -7,6 +7,8 @@ public class PlayerVisual : MonoBehaviour
 
     private readonly int X = Animator.StringToHash("X");
     private readonly int Y = Animator.StringToHash("Y");
+    private readonly int FALL = Animator.StringToHash("Fall");
+    private readonly int RESET = Animator.StringToHash("Reset");
 
     private void Awake()
     {
@@ -15,13 +17,23 @@ public class PlayerVisual : MonoBehaviour
 
     public void Move(int dirx, int diry)
     {
-        _animator.SetFloat(X, dirx);
-        _animator.SetFloat(Y, diry);
+        _animator.SetInteger(X, dirx);
+        _animator.SetInteger(Y, diry);
     }
 
     public void StopMovement()
     {
-        _animator.SetFloat(X, 0);
-        _animator.SetFloat(Y, 0);
+        _animator.SetInteger(X, 0);
+        _animator.SetInteger(Y, 0);
+    }
+
+    public void Fall()
+    {
+        _animator.SetTrigger(FALL);
+    }
+
+    public void ResetPlayer()
+    {
+        _animator.SetTrigger(RESET);
     }
 }
