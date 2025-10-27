@@ -1,15 +1,18 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private PlayerVisual _playerVisual;
     [SerializeField] private float _tileSize = 1f;
-    [SerializeField] private Vector3[] _possibleStartPositions;
 
     [Header("Floor Check")]
     [SerializeField] private LayerMask _floorLayer;
     [SerializeField] private float _checkRadius = 0.1f;
+
+    [SerializeField] private LayerMask _boxLayer;
+
 
     private EventSystem _eventSystem;
 
@@ -21,16 +24,20 @@ public class PlayerMovement : MonoBehaviour
     private float _lastMoveTime;
     private readonly float _moveDelay = 0.2f;
 
+    private Vector2[] _possibleStartPositions;
+
     private void Awake()
     {
         _eventSystem = FindAnyObjectByType<EventSystem>();
         _boxes = FindObjectsOfType<BoxMovement>();
+        GetStartPositions();
     }
 
     private void OnEnable()
     {
         _eventSystem.OnResetButtonClick += ResetPosition;
         _eventSystem.OnUndoButtonClick += Return;
+        GetRandomPosition();
     }
 
     private void OnDisable()
@@ -42,6 +49,24 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         Move();
+    }
+
+    private void GetStartPositions()
+    {
+        List<Vector2> startPositions = new(); ;
+        for (int i = -20; i <= 20; i++)
+        {
+            for (int j = -20; j <= 20; j++)
+            {
+                Vector2 checkPosition = new(i * _tileSize, j * _tileSize);
+                Collider2D floor = Physics2D.OverlapCircle(checkPosition, _checkRadius, _floorLayer);
+                if (floor == null)
+                    continue;
+                Collider2D box = Physics2D.OverlapCircle(checkPosition, _checkRadius, _boxLayer);
+                if (box == null) startPositions.Add(checkPosition);
+            }
+        }
+        _possibleStartPositions = startPositions.ToArray();
     }
 
     private void Move()
@@ -133,6 +158,7 @@ public class PlayerMovement : MonoBehaviour
         GetRandomPosition();
         _canMove = true;
         _playerVisual.ResetPlayer();
+        _lastPosition = transform.position;
     }
 
     private void Return()

@@ -1,18 +1,26 @@
 using UnityEngine;
+using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class ThemePicker : MonoBehaviour
 {
-    private int _pickedTheme;
+    [SerializeField] private int _pickedTheme;
 
     private void Awake()
     {
-        _pickedTheme = PlayerPrefs.GetInt("Theme");   
-        /////
+        Image image = GetComponent<Image>();
+        image.color = _pickedTheme switch
+        {
+            0 => Color.white,
+            1 => Color.cyan,
+            2 => Color.magenta,
+            _ => Color.white,
+        };
     }
 
-    private void PickTheme(int pickedTheme)
+    public void PickTheme()
     {
-        _pickedTheme = pickedTheme;
-        PlayerPrefs.SetInt("Theme", pickedTheme);
+        PlayerPrefs.SetInt("Theme", _pickedTheme);
+        PlayerPrefs.Save();
     }
 }

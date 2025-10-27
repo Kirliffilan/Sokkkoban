@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RedFall
+  m_Name: Fall
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,13 +21,13 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 1033201055, guid: 1aa53a8633432244689142206373b8e8, type: 3}
+      value: {fileID: -804304645, guid: c7304379126b6af4884b76697dea228d, type: 3}
     - time: 0.25
-      value: {fileID: 1934334286, guid: 1aa53a8633432244689142206373b8e8, type: 3}
+      value: {fileID: -55164770, guid: c7304379126b6af4884b76697dea228d, type: 3}
     - time: 0.5
-      value: {fileID: 393814061, guid: 1aa53a8633432244689142206373b8e8, type: 3}
+      value: {fileID: 696561545, guid: c7304379126b6af4884b76697dea228d, type: 3}
     - time: 0.75
-      value: {fileID: -164215608, guid: 1aa53a8633432244689142206373b8e8, type: 3}
+      value: {fileID: 1803631806, guid: c7304379126b6af4884b76697dea228d, type: 3}
     - time: 1
       value: {fileID: 0}
     attribute: m_Sprite
@@ -52,10 +52,10 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 1033201055, guid: 1aa53a8633432244689142206373b8e8, type: 3}
-    - {fileID: 1934334286, guid: 1aa53a8633432244689142206373b8e8, type: 3}
-    - {fileID: 393814061, guid: 1aa53a8633432244689142206373b8e8, type: 3}
-    - {fileID: -164215608, guid: 1aa53a8633432244689142206373b8e8, type: 3}
+    - {fileID: -804304645, guid: c7304379126b6af4884b76697dea228d, type: 3}
+    - {fileID: -55164770, guid: c7304379126b6af4884b76697dea228d, type: 3}
+    - {fileID: 696561545, guid: c7304379126b6af4884b76697dea228d, type: 3}
+    - {fileID: 1803631806, guid: c7304379126b6af4884b76697dea228d, type: 3}
     - {fileID: 0}
   m_AnimationClipSettings:
     serializedVersion: 2

@@ -4,7 +4,7 @@ using UnityEngine;
 public class BoxMovement : MonoBehaviour
 {
     [SerializeField] private BoxVisual _boxVisual;
-    [SerializeField] private ButtonVisual _requiredButton;
+    [SerializeField] private ButtonLogic _requiredButton;
     [SerializeField] private float _tileSize = 1f;
 
     [Header("Floor Check")]
@@ -75,13 +75,23 @@ public class BoxMovement : MonoBehaviour
 
     private void CheckFloor(Vector2 targetPosition)
     {
+        if(_fallen) return;
+
         Collider2D floor = Physics2D.OverlapCircle(targetPosition, _checkRadius, _floorLayer);
 
         if (floor == null)
         {
-            _fallen = true;
-            _boxVisual.Fall();
+            StartCoroutine(Fall());
         }
+    }
+
+    private IEnumerator Fall()
+    {
+        _fallen = true;
+        _boxVisual.Fall();
+        CanMove = false;
+        yield return new WaitForSeconds(1f);
+        CanMove = true;
     }
 
     private void SaveState()
@@ -106,5 +116,6 @@ public class BoxMovement : MonoBehaviour
         CanMove = true;
         _fallen = false;
         _boxVisual.ResetBox();
+        SaveState();
     }
 }

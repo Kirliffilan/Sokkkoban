@@ -166,8 +166,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerVisual: {fileID: 8748973613041443141}
   _tileSize: 1
-  _possibleStartPositions: []
   _floorLayer:
     serializedVersion: 2
     m_Bits: 8
   _checkRadius: 0.1
+  _boxLayer:
+    serializedVersion: 2
+    m_Bits: 64

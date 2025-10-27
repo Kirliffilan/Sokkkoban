@@ -1,13 +1,15 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class ButtonVisual : MonoBehaviour
+public class ButtonLogic : MonoBehaviour
 {
     private EventSystem _eventSystem;
 
     private Animator _animator;
 
     private bool _isLastPressed = false;
+
+    public bool IsPressed { get; private set; } = false;
 
     private readonly int IS_PRESSED = Animator.StringToHash("IsPressed");
 
@@ -20,23 +22,35 @@ public class ButtonVisual : MonoBehaviour
 
     private void OnEnable()
     {
-        _eventSystem.OnResetButtonClick += ResetVisual;
+        _eventSystem.OnResetButtonClick += ResetButton;
         _eventSystem.OnPlayerMovement += SaveState;
         _eventSystem.OnUndoButtonClick += Undo;
     }
 
     private void OnDisable()
     {
-        _eventSystem.OnResetButtonClick -= ResetVisual;
+        _eventSystem.OnResetButtonClick -= ResetButton;
         _eventSystem.OnPlayerMovement -= SaveState;
         _eventSystem.OnUndoButtonClick -= Undo;
     }
 
-    public void PressButton() => _animator.SetBool(IS_PRESSED, true);
+    public void PressButton()
+    {
+        IsPressed = true;
+        _eventSystem.ButtonPressed();
+        _animator.SetBool(IS_PRESSED, true);
+    }
 
-    private void ResetVisual() => _animator.SetBool(IS_PRESSED, false);
+    private void ResetButton()
+    {
+        _animator.SetBool(IS_PRESSED, false);
+        IsPressed = false;
+    }
+    private void SaveState() => _isLastPressed = IsPressed;
 
-    private void SaveState() => _isLastPressed = _animator.GetBool(IS_PRESSED);
-
-    private void Undo() => _animator.SetBool(IS_PRESSED, _isLastPressed);
+    private void Undo()
+    {
+        _animator.SetBool(IS_PRESSED, _isLastPressed);
+        IsPressed = _isLastPressed;
+    }
 }
