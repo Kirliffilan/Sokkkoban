@@ -150,6 +150,7 @@ public class PlayerMovement : MonoBehaviour
     private void GetRandomPosition()
     {
         transform.position = _possibleStartPositions[Random.Range(0, _possibleStartPositions.Length)];
+        _lastPosition = transform.position;
     }
 
     private void ResetPosition()
@@ -158,7 +159,6 @@ public class PlayerMovement : MonoBehaviour
         GetRandomPosition();
         _canMove = true;
         _playerVisual.ResetPlayer();
-        _lastPosition = transform.position;
     }
 
     private void Return()

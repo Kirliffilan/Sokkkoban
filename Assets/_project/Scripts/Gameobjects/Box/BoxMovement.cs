@@ -27,6 +27,7 @@ public class BoxMovement : MonoBehaviour
     {
         _eventSystem = FindAnyObjectByType<EventSystem>();
         _startPosition = transform.position;
+        _lastPosition = _startPosition;
     }
 
     private void OnEnable()
