@@ -11,6 +11,8 @@ public class BoxMovement : MonoBehaviour
     [SerializeField] private LayerMask _floorLayer;
     [SerializeField] private float _checkRadius = 0.5f;
 
+    private BoxMovement[] _boxes;
+
     private EventSystem _eventSystem;
 
     private Vector3 _lastPosition;
@@ -21,6 +23,8 @@ public class BoxMovement : MonoBehaviour
 
     private bool _fallen = false;
 
+    public bool Fallen => _fallen;
+
     public bool CanMove { get; private set; } = true;
 
     private void Awake()
@@ -28,6 +32,11 @@ public class BoxMovement : MonoBehaviour
         _eventSystem = FindAnyObjectByType<EventSystem>();
         _startPosition = transform.position;
         _lastPosition = _startPosition;
+    }
+
+    private void Start()
+    {
+        _boxes = FindObjectsOfType<BoxMovement>();
     }
 
     private void OnEnable()
@@ -44,6 +53,21 @@ public class BoxMovement : MonoBehaviour
         _eventSystem.OnResetButtonClick -= ResetPosition;
     }
 
+    public bool CheckNextBox(int dirx, int diry)
+    {
+        Vector3 target = new(transform.position.x + dirx * _tileSize,
+            transform.position.y + diry * _tileSize);
+        foreach (var box in _boxes)
+        {
+            if (box == this || box.Fallen) continue;
+            if (Vector3.Distance(box.transform.position, target) <= 0.01f)
+            {
+                return false;
+            }
+        }
+        Move(dirx, diry);
+        return true;
+    }
     public void Move(int dirx, int diry)
     {
         if (!CanMove) return;

@@ -103,15 +103,10 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Vector3.Distance(box.transform.position, target) < 0.01f)
             {
-                if (box.CanMove)
-                {
-                    box.Move(dirx, diry);
-                    break;
-                }
-                else
-                {
+                if(box.Fallen)
+                    continue;
+                if (!box.CanMove || !box.CheckNextBox(dirx, diry) )
                     return;
-                }
             }
         }
 
